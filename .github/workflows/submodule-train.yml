@@ -9,7 +9,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Submodule Train
         run: |
-          ls ${{ github.workspace }}
-          python3 submodule-train.py
+          python3 submodule-train.py -p ${{ github.event.number }}
