@@ -30,7 +30,7 @@ def submodule_changing_prs():
 
 def recent_submodule_commits():
     subprocess.run(['git', 'fetch', 'origin', 'main'], capture_output=True, check=True, cwd='submodule-project-child')
-    result = subprocess.run(['git', 'rev-list', 'HEAD'], capture_output=True, check=True, cwd='submodule-project-child')
+    result = subprocess.run(['git', 'rev-list', 'origin', 'main'], capture_output=True, check=True, cwd='submodule-project-child')
     if result.returncode == EX_OK:
         return result.stdout.decode('utf-8').splitlines()
     else:
