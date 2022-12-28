@@ -2,7 +2,7 @@ name: Submodule Train 🚀
 run-name: ${{ github.actor }} is testing out GitHub Actions 
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
+  Submodule-Train-GitHub-Actions:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -12,4 +12,4 @@ jobs:
       - name: Run Submodule Train
         run: |
           ls ${{ github.workspace }}
-          python3 train.py
+          python3 submodule-train.py
