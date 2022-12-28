@@ -12,4 +12,6 @@ jobs:
       - name: Run Submodule Train
         run: |
           ls ${{ github.workspace }}
-          python3 submodule-train.py
+          cd rougly
+          git fetch --all
+          git rev-list origin/main
