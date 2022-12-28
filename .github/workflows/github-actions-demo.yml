@@ -15,4 +15,6 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
+          python3 --version
+          gh -h
       - run: echo "🍏 This job's status is ${{ job.status }}."
