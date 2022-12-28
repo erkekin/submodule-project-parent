@@ -3,9 +3,13 @@
 
 from os import EX_OK, EX_USAGE
 import subprocess
-import sys
-from pathlib import Path
-from python_utilities import lipo
 
+def get_current_submodule_hash():
+    result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github+json', "/repos/erkekin/submodule-project-parent/contents/submodule-project-child", '-q', '.sha'], capture_output=True, check=False)
+    if result.returncode == EX_OK:
+        return result.stdout.decode('utf-8').strip()
+    else:
+        print(result.stderr)
 
 print("hello")
+get_current_submodule_hash()
