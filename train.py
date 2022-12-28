@@ -37,6 +37,7 @@ def recent_submodule_commits():
     else:
         print(result.stderr)
 
+
 def get_diff_in_pr(pr_number):
     result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github.diff', "repos/erkekin/submodule-project-parent/pulls/" + pr_number], capture_output=True, check=True)
     result = subprocess.run(['grep', 'Subproject'], input=result.stdout, capture_output=True, check=False)
