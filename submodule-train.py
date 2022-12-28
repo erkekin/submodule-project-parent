@@ -70,4 +70,4 @@ for i in submodule_changing_prs():
 # for hash in recent_submodule_commits():
 #     print(hash, processPRs(prs, hash, current_submodule_hash))
 
-print(prs)
+print(recent_submodule_commits())
