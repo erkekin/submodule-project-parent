@@ -11,26 +11,26 @@ class GitHubPR:
         self.submodule_hash_to = submodule_change[1]
 
 def get_current_submodule_hash():
-    result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github+json', "/repos/erkekin/submodule-project-parent/contents/submodule-project-child", '-q', '.sha'], capture_output=True, check=True)
+    result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github+json', "/repos/erkekin/submodule-project-parent/contents/roughly", '-q', '.sha'], capture_output=True, check=True)
     if result.returncode == EX_OK:
         return result.stdout.decode('utf-8').strip()
     else:
         print(result.stderr)
 
 def submodule_changing_prs():
-    result = subprocess.run(['gh', 'pr', 'list', "-L", "100", "-s", "all", "--json", "number,files", '-q', '.[] | select(.files[].path=="submodule-project-child").number'], capture_output=True, check=True)
+    result = subprocess.run(['gh', 'pr', 'list', "-L", "100", "-s", "all", "--json", "number,files", '-q', '.[] | select(.files[].path=="roughly").number'], capture_output=True, check=True)
     if result.returncode == EX_OK:
         output = result.stdout.decode('utf-8')
         if output == "":
-            print("Nothing to worry about, there's no PR increasing the hash of 'submodule-project-child'")
+            print("Nothing to worry about, there's no PR increasing the hash of 'roughly'")
         else:
             return output.splitlines()
     else:
         print(result.stderr)
 
 def recent_submodule_commits():
-    subprocess.run(['git', 'fetch', 'origin', 'main'], capture_output=True, check=True, cwd='submodule-project-child')
-    result = subprocess.run(['git', 'log', 'origin/main', '--format=format:%H'], capture_output=True, check=True, cwd='submodule-project-child')
+    subprocess.run(['git', 'fetch', 'origin', 'main'], capture_output=True, check=True, cwd='roughly')
+    result = subprocess.run(['git', 'log', 'origin/main', '--format=format:%H'], capture_output=True, check=True, cwd='roughly')
     if result.returncode == EX_OK:
         return result.stdout.decode('utf-8').splitlines()
     else:
