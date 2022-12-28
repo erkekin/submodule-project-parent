@@ -1,3 +1,0 @@
-[submodule "submodule-project-child"]
-	path = submodule-project-child
-	url = https://github.com/erkekin/submodule-project-child

@@ -65,9 +65,7 @@ prs = []
 for i in submodule_changing_prs():
     prs.append(get_diff_in_pr(i))
 
-# current_submodule_hash = get_current_submodule_hash()
+current_submodule_hash = get_current_submodule_hash()
 
-# for hash in recent_submodule_commits():
-#     print(hash, processPRs(prs, hash, current_submodule_hash))
-
-print(recent_submodule_commits())
+for hash in recent_submodule_commits():
+    print(hash, processPRs(prs, hash, current_submodule_hash))
