@@ -17,7 +17,6 @@ def get_current_submodule_hash():
     else:
         print(result.stderr)
 
-
 def submodule_changing_prs():
     result = subprocess.run(['gh', 'pr', 'list', "-L", "100", "-s", "all", "--json", "number,files", '-q', '.[] | select(.files[].path=="submodule-project-child").number'], capture_output=True, check=True)
     if result.returncode == EX_OK:
