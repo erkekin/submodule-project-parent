@@ -29,6 +29,14 @@ def submodule_changing_prs():
     else:
         print(result.stderr)
 
+def recent_submodule_commits1():
+    subprocess.run(['git', 'fetch', 'origin', 'main'], capture_output=True, check=True, cwd='submodule-project-child')
+    result = subprocess.run(['git', 'rev-list', 'HEAD'], capture_output=True, check=True, cwd='submodule-project-child')
+    if result.returncode == EX_OK:
+        return result.stdout.decode('utf-8').splitlines()
+    else:
+        print(result.stderr)
+
 def recent_submodule_commits():
     result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github+json', "/repos/erkekin/submodule-project-child/commits", '-q', '.[].sha'], capture_output=True, check=True)
     if result.returncode == EX_OK:
@@ -66,7 +74,7 @@ for i in submodule_changing_prs():
     prs.append(get_diff_in_pr(i))
 
 current_submodule_hash = get_current_submodule_hash()
-recent_submodule_commits = recent_submodule_commits()
+recent_submodule_commits = recent_submodule_commits1()
 
 for hash in recent_submodule_commits:
     print(hash, processPRs(prs, hash, current_submodule_hash))
