@@ -19,7 +19,7 @@ def get_current_submodule_hash():
 
 
 def submodule_changing_prs():
-    result = subprocess.run(['gh', 'pr', 'list', "-L", "100", "-s", "all", "--json", "number,files", '-q', '.[] | select(.files[].path=="submodule-project-child").number'], capture_output=True, check=False)
+    result = subprocess.run(['gh', 'pr', 'list', "-L", "100", "-s", "all", "--json", "number,files", '-q', '.[] | select(.files[].path=="submodule-project-child").number'], capture_output=True, check=True)
     if result.returncode == EX_OK:
         output = result.stdout.decode('utf-8')
         if output == "":
@@ -30,14 +30,14 @@ def submodule_changing_prs():
         print(result.stderr)
 
 def recent_submodule_commits():
-    result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github+json', "/repos/erkekin/submodule-project-child/commits", '-q', '.[].sha'], capture_output=True, check=False)
+    result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github+json', "/repos/erkekin/submodule-project-child/commits", '-q', '.[].sha'], capture_output=True, check=True)
     if result.returncode == EX_OK:
         return result.stdout.decode('utf-8').splitlines()
     else:
         print(result.stderr)
 
 def get_diff_in_pr(pr_number):
-    result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github.diff', "repos/erkekin/submodule-project-parent/pulls/" + pr_number], capture_output=True, check=False)
+    result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github.diff', "repos/erkekin/submodule-project-parent/pulls/" + pr_number], capture_output=True, check=True)
     result = subprocess.run(['grep', 'Subproject'], input=result.stdout, capture_output=True, check=False)
     result = subprocess.run(['awk', '{print $3}'], input=result.stdout, capture_output=True, check=False)
 
