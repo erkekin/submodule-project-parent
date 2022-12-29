@@ -1,0 +1,23 @@
+name: Submodule Train - Merged PR
+run-name: ${{ github.actor }} is testing out GitHub Actions 
+on:
+  pull_request:
+    # paths:
+    # - "roughly"
+    types:
+      - closed
+
+jobs:
+    Submodule-Train-GitHub-Actions:
+      if: github.event.pull_request.merged == true
+      runs-on: ubuntu-latest
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      steps:
+        - name: Check out repository code
+          uses: actions/checkout@v3
+          with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+        - name: Run Submodule Train
+          run: |
+            python3 submodule-train.py -p ${{ github.event.number }}

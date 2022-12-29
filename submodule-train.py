@@ -73,13 +73,10 @@ class Train:
 
         for pr in prs:
             if pr.submodule_hash_to == submodule_commit_hash:
-                pr_line.append(pr.number + " ⬅")
-                if pr.isCurrent:
-                    pr_line.append("(THIS PR)")
+                pr_line.append(("(THIS PR)" if pr.isCurrent else "") + pr.number + "◄")
             if pr.submodule_hash_from == submodule_commit_hash:
-                pr_line.append(pr.number + " ⬆")
-                if pr.isCurrent:
-                    pr_line.append("(THIS PR)")
+                pr_line.append(("(THIS PR)" if pr.isCurrent else "") + pr.number + "▲")
+
         return "\t".join(pr_line)
 
     def run(self):
@@ -98,7 +95,7 @@ class Train:
         lines.append("```")
         output = "\n".join(lines)
         
-        self.post_comment(prs, "**[Automated Comment]** Another PR altered the submodule is open. Please have a look and update this PR accordingly." + output)
+        self.post_comment(prs, "[Another PR](https://www.google.com) altered the " + self.submodule_name + " submodule is just merged in. Please have a look and update this PR accordingly." + output)
 
 train = Train("roughly", "submodule-project-parent", argParser.parse_args().pr)
 train.run()
