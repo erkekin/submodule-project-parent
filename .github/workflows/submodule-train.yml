@@ -4,6 +4,9 @@ on:
   push:
     paths:
     - "roughly"
+  pull_request:
+    paths:
+    - "roughly"
 
 jobs:
   Submodule-Train-GitHub-Actions:
