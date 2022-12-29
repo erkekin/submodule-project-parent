@@ -16,13 +16,14 @@ class GitHubPR:
         self.isCurrent = number == current_pr_number
 
 class Train:
-    def __init__(self, submodule_name, parent_repo_name, pr):
+    def __init__(self, repo, submodule_name, parent_repo_name, pr):
+        self.repo = repo
         self.submodule_name = submodule_name
         self.parent_repo_name = parent_repo_name
         self.current_pr_number = pr
 
     def get_current_submodule_hash(self):
-        result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github+json', "/repos/erkekin/" + self.parent_repo_name + "/contents/" + self.submodule_name, '-q', '.sha'], capture_output=True, check=True)
+        result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github+json', "/repos/" + self.repo + "/" + self.parent_repo_name + "/contents/" + self.submodule_name, '-q', '.sha'], capture_output=True, check=True)
         if result.returncode == EX_OK:
             return result.stdout.decode('utf-8').strip()
         else:
@@ -40,7 +41,7 @@ class Train:
             print(result.stderr)
           
     def recent_submodule_commits(self):
-        result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github+json', "/repos/erkekin/" + self.submodule_name + "/commits", '-q', '.[].sha'], capture_output=True, check=True)
+        result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github+json', "/repos/" + self.repo + "/" + self.submodule_name + "/commits", '-q', '.[].sha'], capture_output=True, check=True)
         if result.returncode == EX_OK:
             return result.stdout.decode('utf-8').splitlines()
         else:
@@ -48,7 +49,7 @@ class Train:
 
 
     def get_diff_in_pr(self, pr_number):
-        result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github.diff', "repos/erkekin/" + self.parent_repo_name + "/pulls/" + pr_number], capture_output=True, check=True)
+        result = subprocess.run(['gh', 'api', '-H', 'Accept: application/vnd.github.diff', "repos/" + self.repo + "/" + self.parent_repo_name + "/pulls/" + pr_number], capture_output=True, check=True)
         result = subprocess.run(['grep', 'Subproject'], input=result.stdout, capture_output=True, check=False)
         result = subprocess.run(['awk', '{print $3}'], input=result.stdout, capture_output=True, check=False)
 
@@ -59,7 +60,6 @@ class Train:
             print("problem occured retriveing the open submodule prs")
         print(result.stderr)
 
-
     def post_comment(self, prs, body):
         for pr in prs:
             print("Posting comment to PR" + " " + pr.number)
@@ -69,7 +69,7 @@ class Train:
     def processPRs(self, prs, submodule_commit_hash, current_submodule_hash):
         pr_line = []
         if current_submodule_hash == submodule_commit_hash.strip():
-            pr_line.append(" ⬅ CURRENT HASH")
+            pr_line.append(" ◄CURRENT HASH")
 
         for pr in prs:
             if pr.submodule_hash_to == submodule_commit_hash:
@@ -87,15 +87,15 @@ class Train:
 
         current_submodule_hash = self.get_current_submodule_hash()
 
-        for hash in self.recent_submodule_commits():
+        for index, hash in enumerate(self.recent_submodule_commits()):
             metadata = self.processPRs(prs, hash, current_submodule_hash)
             lines.append(hash + "\t" + metadata)
-            print(hash, metadata)
+            print(index, hash, metadata)
 
         lines.append("```")
         output = "\n".join(lines)
         
-        self.post_comment(prs, "[Another PR](https://www.google.com) altered the " + self.submodule_name + " submodule is just merged in. Please have a look and update this PR accordingly." + output)
+        #self.post_comment(prs, "[Another PR](https://www.google.com) altered the " + self.submodule_name + " submodule is just merged in. Please have a look and update this PR accordingly." + output)
 
-train = Train("roughly", "submodule-project-parent", argParser.parse_args().pr)
+train = Train("erkekin", "roughly", "submodule-project-parent", argParser.parse_args().pr)
 train.run()
