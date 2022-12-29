@@ -60,6 +60,17 @@ class Train:
         print(result.stderr)
 
 
+    def post_comment(self, prs, body):
+        for pr in prs:
+            if pr.isCurrent == False:
+                result = subprocess.run(['gh', 'pr', 'comment', pr.number, '-b', body], capture_output=True, check=False)
+
+                if result.returncode == EX_OK:
+                    return
+                else:
+                    print("problem occured posting comment")
+                print(result.stderr)
+
     def processPRs(self, prs, submodule_commit_hash, current_submodule_hash):
         pr_line = []
         if current_submodule_hash == submodule_commit_hash.strip():
@@ -78,13 +89,19 @@ class Train:
 
     def run(self):
         prs = []
+        lines = ["\n```"]
         for i in self.submodule_changing_prs():
             prs.append(self.get_diff_in_pr(i))
 
         current_submodule_hash = self.get_current_submodule_hash()
 
         for hash in self.recent_submodule_commits():
+            lines.append(hash + "\t" + self.processPRs(prs, hash, current_submodule_hash))
             print(hash, self.processPRs(prs, hash, current_submodule_hash))
+
+        lines.append("```")
+        output = "\n".join(lines)
+        self.post_comment(prs, "hello, another PR altered the submodule. Plesae ahae a look and update this PR accordingly." + output)
 
 
 train = Train("roughly", "submodule-project-parent", argParser.parse_args().pr)
