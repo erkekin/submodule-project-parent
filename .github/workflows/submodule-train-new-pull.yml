@@ -4,8 +4,6 @@ on:
   pull_request:
     # paths:
     # - "roughly"
-    types:
-      - created
 
 jobs:
     Submodule-Train-GitHub-Actions:
