@@ -1,5 +1,4 @@
 name: Submodule Train - New PR
-run-name: ${{ github.actor }} is testing out GitHub Actions 
 on:
   pull_request:
     # paths:
@@ -7,7 +6,7 @@ on:
 
 jobs:
     Submodule-Train-GitHub-Actions:
-      if: github.event.number != '' && github.event.number != ''
+      if: github.event.number != ''
       runs-on: ubuntu-latest
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

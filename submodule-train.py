@@ -95,7 +95,7 @@ class Train:
         lines.append("```")
         output = "\n".join(lines)
         
-        #self.post_comment(prs, "[Another PR](https://www.google.com) altered the " + self.submodule_name + " submodule is just merged in. Please have a look and update this PR accordingly." + output)
+        self.post_comment(prs, "[Another PR](https://www.google.com) altered the " + self.submodule_name + " submodule is just merged in. Please have a look and update this PR accordingly." + output)
 
 train = Train("erkekin", "roughly", "submodule-project-parent", argParser.parse_args().pr)
 train.run()
